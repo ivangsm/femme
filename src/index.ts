@@ -7,9 +7,11 @@ const app = new Elysia().use(swagger()).listen(3000)
 
 app.get('/', () => 'Welcome to Femme, ephemeral text box')
 
-app.post('/text', ({ body, set }) => saveEncryptedText(body), {
+app.post('/text', ({ body, set }) => saveEncryptedText(body.text), {
   schema: {
-    body: t.String()
+    body: t.Object({
+      text: t.String()
+    })
   }
 })
 
