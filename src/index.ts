@@ -7,6 +7,7 @@ import { saveEncryptedText, getDecryptedText } from './utils/redis'
 const app = new Elysia()
   .use(
     cors({
+      origin: ['localhost:3000', '0.0.0.0:3000', 'femme.ivansalazar.dev'],
       methods: ['GET', 'POST']
     })
   )
@@ -26,7 +27,7 @@ const welcome = `
           example:
             femme.ivansalazar.dev/abcd-efgh
 
-  caution: all the data has a TTL of 10 mins :)`
+  caution: all the data has a TTL of 10 mins an can only be retrieved one time :)`
 
 app.get('/welcome', () => welcome)
 
