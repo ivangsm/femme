@@ -1,13 +1,21 @@
 import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
+import { cors } from '@elysiajs/cors'
 
 import { saveEncryptedText, getDecryptedText } from './utils/redis'
 
-const app = new Elysia().use(swagger()).listen(3000)
+const app = new Elysia()
+  .use(
+    cors({
+      methods: ['GET', 'POST']
+    })
+  )
+  .use(swagger())
+  .listen(3000)
 
-app.get('/', () => 'Welcome to Femme, ephemeral text box')
+app.get('/', () => 'Welcome to Femme, where your messages are saved for 10 minutes, one time only.')
 
-app.post('/text', ({ body, set }) => saveEncryptedText(body.text), {
+app.post('/text', ({ body }) => saveEncryptedText(body.text), {
   schema: {
     body: t.Object({
       text: t.String()

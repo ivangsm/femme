@@ -1,5 +1,4 @@
 import Redis from 'ioredis'
-import crypto from 'crypto'
 import { getRandomWords } from './words'
 
 const redis = new Redis()

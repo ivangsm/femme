@@ -6,6 +6,7 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/cors": "^0.1.0",
     "@elysiajs/swagger": "^0.2.0",
     "elysia": "latest",
     "ioredis": "^5.3.1"
