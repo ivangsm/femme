@@ -7,7 +7,7 @@ import { deflateSync, inflateSync } from 'zlib'
  */
 export function compressText(text: string): string {
   const compressed = deflateSync(Buffer.from(text))
-  return compressed.toString('base64')
+  return compressed.toString('binary')
 }
 
 /**
@@ -19,6 +19,6 @@ export function decompressText(compressedText: string | null): string {
   if (compressedText === null) {
     return ''
   }
-  const buffer = Buffer.from(compressedText, 'base64')
+  const buffer = Buffer.from(compressedText, 'binary')
   return inflateSync(buffer).toString()
 }
