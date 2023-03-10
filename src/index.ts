@@ -13,16 +13,40 @@ const app = new Elysia()
   .use(swagger())
   .listen(3000)
 
-app.get('/', () => 'Welcome to Femme, where your messages are saved for 10 minutes, one time only.')
+const welcome = `
+  femme - Ephemeral text box
+    
+  Here's only 2 endpoints
+      - '/'
+          example:
+            femme.ivansalazar.dev
+          example body: 
+            {"text": "welcome"}
+      - '/{key}'
+          example:
+            femme.ivansalazar.dev/abcd-efgh
 
-app.post('/text', ({ body }) => saveEncryptedText(body.text), {
-  schema: {
-    body: t.Object({
-      text: t.String()
-    })
+  caution: all the data has a TTL of 10 mins :)`
+
+app.get('/welcome', () => welcome)
+
+app.post(
+  '/',
+  async ({ body, set }) => {
+    return await saveEncryptedText(body?.text ?? ((set.status = 400), undefined))
+  },
+  {
+    schema: {
+      body: t.Object({
+        text: t.String()
+      })
+    }
   }
-})
+)
 
-app.get('/id/:id', (context) => getDecryptedText(context.params.id))
+app.get('/:key', async (context) => {
+  const decryptedText = await getDecryptedText(context.params.key)
+  return decryptedText ?? ((context.set.status = 404), undefined)
+})
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)
