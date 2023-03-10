@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  api:
+    build: .
+    ports:
+      - 3000:3000
+    depends_on:
+      - dragonfly
+    environment:
+      REDIS_HOST: dragonfly
+    networks:
+      - femme-network
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    ulimits:
+      memlock: -1
+    ports:
+      - "6379:6379"
+    volumes:
+      - dragonflydata:/data
+    networks:
+      - femme-network
+networks:
+  femme-network:
+    driver: bridge
+volumes:
+  dragonflydata:

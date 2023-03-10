@@ -3,7 +3,7 @@ FROM debian:11.6-slim as builder
 WORKDIR /app
 
 RUN apt update
-RUN apt install curl unzip -y
+RUN apt install curl unzip wamerican -y
 
 RUN curl https://bun.sh/install | bash
 
@@ -19,6 +19,7 @@ WORKDIR /app
 
 COPY --from=builder /root/.bun/bin/bun bun
 COPY --from=builder /app/node_modules node_modules
+COPY --from=builder /usr/share/dict/words /usr/share/dict/words
 
 COPY src src
 # COPY public public
