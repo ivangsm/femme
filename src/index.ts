@@ -7,32 +7,37 @@ import { saveEncryptedText, getDecryptedText } from './utils/redis'
 const app = new Elysia()
   .use(
     cors({
-      origin: ['localhost:3000', '0.0.0.0:3000', 'femme.ivansalazar.dev'],
-      methods: ['GET', 'POST']
+      origin: ['*'],
+      methods: ['GET', 'POST', 'OPTIONS']
     })
   )
   .use(swagger())
   .listen(3000)
 
-const welcome = `
-  femme - Ephemeral text box
-    
-  Here's only 2 endpoints
-      - '/'
-          example:
-            femme.ivansalazar.dev
-          example body: 
-            {"text": "welcome"}
-      - '/{key}'
-          example:
-            femme.ivansalazar.dev/abcd-efgh
+const welcome = `Femme - Ephemeral Text Box
 
-  caution: all the data has a TTL of 10 mins an can only be retrieved one time :)`
+Welcome to Femme! We offer two endpoints:
+
+- The root endpoint, which allows you to create a new text box.
+Simply send a POST request to the root endpoint with your text in the body, like this:
+  
+  femme.ivansalazar.dev/set
+
+  Example body:
+  {"text": "Welcome!"}
+
+- The second endpoint allows you to retrieve the contents of a text box by key.
+Simply send a GET request to the endpoint with the key in the URL, like this:
+  
+  femme.ivansalazar.dev/txt/abcd-efgh
+
+Please note that all data in Femme has a lifespan of 10 minutes and can only be retrieved once.
+`
 
 app.get('/welcome', () => welcome)
 
 app.post(
-  '/',
+  '/set',
   async ({ body, set }) => {
     return await saveEncryptedText(body?.text ?? ((set.status = 400), undefined))
   },
@@ -45,9 +50,8 @@ app.post(
   }
 )
 
-app.get('/:key', async (context) => {
-  const decryptedText = await getDecryptedText(context.params.key)
-  return decryptedText ?? ((context.set.status = 404), undefined)
+app.get('/txt/:key', async (context) => {
+  return await getDecryptedText(context.params.key) ?? ((context.set.status = 404), undefined)
 })
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)

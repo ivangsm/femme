@@ -13,9 +13,8 @@ const redis = new Redis({ host: process.env.REDIS_HOST || 'localhost' })
 export async function saveEncryptedText(text: string): Promise<string> {
   const key = getRandomWords()
   text = compressText(text)
-
-  const exists = await redis.exists(key)
-  if (exists) {
+  
+  if (await redis.exists(key)) {
     return saveEncryptedText(text)
   }
 
