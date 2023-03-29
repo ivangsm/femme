@@ -1,6 +1,5 @@
 import Redis from 'ioredis'
 import { getRandomWords } from './words'
-import { compressText, decompressText } from './compress'
 
 // Create a Redis client
 const redis = new Redis({ host: process.env.REDIS_HOST || 'localhost' })
@@ -10,12 +9,11 @@ const redis = new Redis({ host: process.env.REDIS_HOST || 'localhost' })
  * @param text The text to save.
  * @returns A Promise resolving to the key used to save the text.
  */
-export async function saveEncryptedText(text: string): Promise<string> {
+export async function saveText(text: string): Promise<string> {
   const key = getRandomWords()
-  text = compressText(text)
   
   if (await redis.exists(key)) {
-    return saveEncryptedText(text)
+    return saveText(text)
   }
 
   // Save the text to Redis with the generated key and set it to expire in 10 minutes
@@ -28,14 +26,13 @@ export async function saveEncryptedText(text: string): Promise<string> {
  * @param key The key to use to retrieve the text.
  * @returns A Promise resolving to the decrypted text, or null if the key is not found.
  */
-export async function getDecryptedText(key: string): Promise<string | null> {
+export async function getText(key: string): Promise<string | null> {
   const data = await redis.get(key)
 
   // If data is found, delete the key and return the decrypted text
   if (data) {
-    const uncompressed = decompressText(data)
     await redis.del(key)
-    return uncompressed
+    return data
   }
   return null
 }
