@@ -39,6 +39,11 @@ app.get('/welcome', () => welcome)
 app.post(
   '/',
   async ({ body, set }) => {
+    console.info(body?.text.length)
+    if (body?.text.length > 10000) {
+      set.status = 400
+      return "You can only upload a text box with a maximum of 10000 characters"
+    }
     return await saveText(body?.text ?? ((set.status = 400), undefined))
   },
   {
