@@ -5,14 +5,6 @@ import { cors } from '@elysiajs/cors'
 import { saveText, getText } from './utils/redis'
 
 const app = new Elysia()
-  .use(
-    cors({
-      origin: ['*'],
-      methods: ['GET', 'POST', 'OPTIONS']
-    })
-  )
-  .use(swagger())
-  .listen(3000)
 
 const welcome = `Femme - Ephemeral Text Box
 
@@ -34,28 +26,33 @@ Simply send a GET request to the endpoint with the key in the URL, like this:
 Please note that all data in Femme has a lifespan of 10 minutes and can only be retrieved once.
 `
 
-app.get('/welcome', () => welcome)
+app.get('/', () => welcome)
 
 app.post(
-  '/',
+  '/add',
   async ({ body, set }) => {
     if (body?.text.length > 10000) {
       set.status = 400
       return "You can only upload a text box with a maximum of 10000 characters"
     }
     return await saveText(body?.text ?? ((set.status = 400), undefined))
-  },
-  {
-    schema: {
-      body: t.Object({
-        text: t.String()
-      })
-    }
-  }
-)
-
-app.get('/:key', async (context) => {
-  return await getText(context.params.key) ?? ((context.set.status = 404), undefined)
+  }, {
+  body: t.Object({
+    text: t.String()
+  })
 })
+
+app.get('/get/:key', async (context) => {
+  return await getText(context.params.key) ?? ((context.set.status = 404), "key not found")
+})
+
+app.use(
+  cors({
+    origin: ['*'],
+    methods: ['GET', 'POST', 'OPTIONS']
+  })
+)
+  .use(swagger())
+  .listen(3000)
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)
