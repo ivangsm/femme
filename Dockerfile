@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim as builder
+FROM bitnami/minideb:latest as builder
 
 WORKDIR /app
 

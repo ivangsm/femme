@@ -52,8 +52,8 @@ export const handleGetRequest = async (ctx: Context) => {
       return 'key not found'
     }
     return text
-  } catch (error) {
+  } catch (e) {
     set.status = 500
-    return 'internal server error'
+    return e
   }
 }
