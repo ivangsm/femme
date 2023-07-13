@@ -11,12 +11,12 @@ const words: string[] = fs
  * @param n The number of words to generate. Defaults to 2.
  * @returns A string of random words joined by hyphens.
  */
-export function getRandomWords(n: number = 2): string {
-  // Generate an array of n random indices into the words array
-  const randomIndices: number[] = Array.from({ length: n }, () => Math.floor(Math.random() * words.length))
+export function getRandomWords(n = 2): string {
+  const randomWords = Array.from({ length: n }, () => {
+    const index = Math.floor(Math.random() * words.length);
+    const word = words[index].trim().replace(/[^a-zA-Z]/g, '').toLowerCase();
+    return word;
+  });
 
-  // Join the random words with hyphens and return the result
-  return randomIndices.map((index) =>
-    words[index].trim().replace(/[^a-zA-Z]/g, '').toLowerCase()
-  ).join('-')
+  return randomWords.join('-');
 }

@@ -1,4 +1,4 @@
-FROM debian:11.6-slim as builder
+FROM debian:bookworm-slim as builder
 
 WORKDIR /app
 

@@ -15,6 +15,5 @@ export function compressText(text: string): string {
  * @returns The decompressed text as a string.
  */
 export function decompressText(compressedText: string | null): string {
-  if (compressedText === null) return ''
-  return inflateSync(Buffer.from(compressedText, 'binary')).toString()
+  return compressedText ? inflateSync(Buffer.from(compressedText, 'binary')).toString() : '';
 }

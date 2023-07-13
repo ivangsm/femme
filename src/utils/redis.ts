@@ -10,15 +10,14 @@ const redis = new Redis({ host: process.env.REDIS_HOST || 'localhost' })
  * @returns A Promise resolving to the key used to save the text.
  */
 export async function saveText(text: string): Promise<string> {
-  const key = getRandomWords()
+  let key;
   
-  if (await redis.exists(key)) {
-    return saveText(text)
-  }
+  do {
+    key = getRandomWords();
+  } while (await redis.exists(key));
 
-  // Save the text to Redis with the generated key and set it to expire in 10 minutes
-  await redis.set(key, text, 'EX', 600)
-  return key
+  await redis.set(key, text, 'EX', 600);
+  return key;
 }
 
 /**
@@ -29,10 +28,10 @@ export async function saveText(text: string): Promise<string> {
 export async function getText(key: string): Promise<string | null> {
   const data = await redis.get(key)
 
-  // If data is found, delete the key and return the decrypted text
   if (data) {
-    await redis.del(key)
+    await Promise.all([redis.del(key)])
     return data
   }
+
   return null
 }
