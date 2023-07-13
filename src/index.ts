@@ -55,6 +55,6 @@ app
       methods: ['GET', 'POST', 'OPTIONS']
     })
   )
-  .listen(3300)
+  .listen(3000)
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)
