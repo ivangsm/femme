@@ -2,7 +2,7 @@ import Redis from 'ioredis'
 import { getRandomWords } from './words'
 
 // Create a Redis client
-const redis = new Redis({ host: process.env.REDIS_HOST || 'localhost' })
+const redis = new Redis({ host: process.env.REDIS_HOST || '127.0.0.1' })
 
 /**
  * Save a string of text to Redis, encrypted with a randomly generated key.
