@@ -10,14 +10,14 @@ const redis = new Redis({ host: process.env.REDIS_HOST || 'localhost' })
  * @returns A Promise resolving to the key used to save the text.
  */
 export async function saveText(text: string): Promise<string> {
-  let key;
-  
-  do {
-    key = getRandomWords();
-  } while (await redis.exists(key));
+  let key = ''
 
-  await redis.set(key, text, 'EX', 600);
-  return key;
+  do {
+    key = getRandomWords()
+  } while (await redis.exists(key))
+
+  await redis.set(key, text, 'EX', 600)
+  return key
 }
 
 /**
