@@ -45,7 +45,7 @@ export const handleGetRequest = async (ctx: Context) => {
   const { params, set } = ctx
 
   try {
-    const key = params?.key as string
+    const key = (params as { key: string }).key
     const text = await getText(key)
     if (!text) {
       set.status = 404

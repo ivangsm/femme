@@ -1,15 +1,17 @@
 {
   "name": "femme",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun --watch src/index.ts",
+    "build": "bun build src/index.ts",
+    "start": "NODE_ENV=production bun src/index.ts",
+    "test": "bun test"
   },
   "dependencies": {
-    "@elysiajs/cors": "^0.8.0",
-    "@elysiajs/swagger": "^0.8.5",
-    "elysia": "^0.8.17",
-    "ioredis": "^5.3.2"
+    "@elysiajs/cors": "^1.0.2",
+    "@elysiajs/swagger": "^1.0.4",
+    "elysia": "latest",
+    "ioredis": "^5.4.1"
   },
   "devDependencies": {
     "bun-types": "latest"

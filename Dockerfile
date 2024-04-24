@@ -28,9 +28,10 @@ COPY --from=builder /root/.bun/bin/bun bun
 COPY --from=builder /app/node_modules node_modules
 COPY --from=builder /usr/share/dict/words /usr/share/dict/words
 COPY src src
+COPY tsconfig.json .
 
 # Set environment variable
-ENV ENV production
+ENV NODE_ENV production
 
 # Set the command to run your application
 CMD ["./bun", "src/index.ts"]
